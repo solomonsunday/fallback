@@ -11,6 +11,7 @@
     "test": "jest --watch *.js"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.0.18",
     "dayjs": "^1.11.10",
     "next": "14.0.3",
