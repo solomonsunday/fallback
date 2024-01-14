@@ -58,3 +58,22 @@ export interface ErrorContextProps {
 export interface IKeywords {
   onSearch: (query: string) => void;
 }
+
+export interface HotelContextProps {
+  createHotel: (hotel: IHotel) => void;
+  getHotels: () => void;
+  getHotel: (id: string) => IHotel | null;
+  updateHotel: (hotel: IHotel) => void;
+  deleteHotel: (id: string) => void;
+  searchHotels: (value: string) => IHotel[];
+  hotelData: IHotel[];
+  loading: boolean;
+}
+
+export interface IHotel {
+  id: string;
+  name: string;
+  city: string;
+  country: string;
+  address: string;
+}

@@ -1,4 +1,4 @@
-import { IUser } from "@/utils/interface";
+import { IHotel, IUser } from "@/utils/interface";
 import {
   ChevronRightIcon,
   EllipsisHorizontalIcon,
@@ -7,10 +7,21 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
+import { useHotelContext } from "@/context/HotelContext";
 
-const UserCard = ({ user }: { user: IUser }) => {
-  const router = useRouter();
-  const { avatar_url, login, id } = user;
+const HotelCard = ({ hotel }: { hotel: IHotel }) => {
+  const { name, address, city, country, id } = hotel;
+  const { getHotel, deleteHotel } = useHotelContext();
+
+  const handleViewHotel = (id: string) => {
+    const hotel = getHotel(id);
+    console.log("id hotel: ", id, "hotel item", hotel);
+  };
+
+  const handleDeleteHotel = (id: string) => {
+    deleteHotel(id);
+    console.log("hotel deleted");
+  };
 
   return (
     <div
@@ -25,7 +36,7 @@ const UserCard = ({ user }: { user: IUser }) => {
         width={100}
         height={0}
       />
-      <div>Eko hotel</div>
+      <div>{name}</div>
       <div>
         {/* <EllipsisHorizontalIcon width={20} /> */}
         <div className="">
@@ -65,7 +76,7 @@ const UserCard = ({ user }: { user: IUser }) => {
                         className={`${
                           active ? "bg-gray-200 text-black" : "text-black-900"
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                        onClick={() => router.push(`/user/${login}`)}
+                        onClick={() => handleViewHotel(id)}
                       >
                         View
                       </button>
@@ -95,7 +106,7 @@ const UserCard = ({ user }: { user: IUser }) => {
                   <Menu.Item>
                     {({ active }) => (
                       <button
-                        // onClick={() => onSuspendUser(user)}
+                        onClick={() => handleDeleteHotel(id)}
                         className={`${
                           active ? "bg-gray-200 text-white" : "text-gray-900"
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm  text-red-500`}
@@ -114,4 +125,4 @@ const UserCard = ({ user }: { user: IUser }) => {
   );
 };
 
-export default UserCard;
+export default HotelCard;
