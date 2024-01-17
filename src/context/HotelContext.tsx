@@ -1,22 +1,8 @@
 "use client";
 import ErrorModal from "@/components/modal/ErrorModal";
 import { HOTEL_KEY } from "@/utils/constants";
-import {
-  ErrorContextProps,
-  ErrorResponse,
-  HotelContextProps,
-  IHotel,
-} from "@/utils/interface";
-import React, {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-  useCallback,
-} from "react";
-
-import { uuid } from "uuidv4";
+import { ErrorResponse, HotelContextProps, IHotel } from "@/utils/interface";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 const HotelContext = createContext<HotelContextProps | undefined>(undefined);
 
@@ -36,6 +22,7 @@ export const HotelProvider: React.FC<HotelProviderProps> = ({ children }) => {
   const [error, setError] = useState<ErrorResponse | null>(null);
   const [hotelData, setHotelData] = useState<IHotel[]>([]);
   const [loading, setLoading] = useState(false);
+  const [selectedHotel, setSelectedHotel] = useState<IHotel | null>(null);
 
   const createHotel = (hotel: IHotel): void => {
     if (!hotel) {
@@ -63,11 +50,14 @@ export const HotelProvider: React.FC<HotelProviderProps> = ({ children }) => {
     }
 
     localStorage.setItem(HOTEL_KEY, JSON.stringify([...data, hotel]));
+    getHotels();
   };
 
   const getHotels = () => {
+    setLoading(true);
     const data = localStorage.getItem(HOTEL_KEY);
     setHotelData(data ? JSON.parse(data) : []);
+    setLoading(false);
   };
 
   const getHotel = (id: string): IHotel | null => {
@@ -94,7 +84,7 @@ export const HotelProvider: React.FC<HotelProviderProps> = ({ children }) => {
       localStorage.setItem(HOTEL_KEY, JSON.stringify(data));
       console.log("LOCAL STORAGE UPDATE");
     } else {
-      console.log("NOT UPDATE TO LOCAL STORAGE");
+      console.log("NOT UPDATED TO LOCAL STORAGE");
     }
   };
 
@@ -121,17 +111,6 @@ export const HotelProvider: React.FC<HotelProviderProps> = ({ children }) => {
     );
   };
 
-  useEffect(() => {
-    // createHotel({
-    //   id: uuid(),
-    //   name: "Eko Hotel",
-    //   address: "Victoria Island Lagos",
-    //   city: "Lagos",
-    //   country: "Nigeria",
-    // });
-    getHotels();
-  }, []);
-
   return (
     <HotelContext.Provider
       value={{
@@ -143,6 +122,8 @@ export const HotelProvider: React.FC<HotelProviderProps> = ({ children }) => {
         getHotels,
         hotelData,
         loading,
+        setSelectedHotel,
+        selectedHotel,
       }}
     >
       {children}

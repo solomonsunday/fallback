@@ -4,6 +4,8 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { ErrorProvider } from "@/context/ErrorContext";
 import { HotelProvider } from "@/context/HotelContext";
+import { ModalStatusProvider } from "@/context/ModalContext";
+import SearchBar from "@/components/SearchBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +25,9 @@ export default function RootLayout({
         <Header />
         <div className="pt-28">
           <ErrorProvider>
-            <HotelProvider>{children}</HotelProvider>
+            <ModalStatusProvider>
+              <HotelProvider>{children}</HotelProvider>
+            </ModalStatusProvider>
           </ErrorProvider>
         </div>
       </body>

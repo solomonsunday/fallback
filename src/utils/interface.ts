@@ -68,6 +68,8 @@ export interface HotelContextProps {
   searchHotels: (value: string) => IHotel[];
   hotelData: IHotel[];
   loading: boolean;
+  setSelectedHotel: Dispatch<SetStateAction<IHotel | null>>;
+  selectedHotel: IHotel | null;
 }
 
 export interface IHotel {

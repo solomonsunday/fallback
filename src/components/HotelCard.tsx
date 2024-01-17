@@ -1,26 +1,42 @@
 import { IHotel, IUser } from "@/utils/interface";
-import {
-  ChevronRightIcon,
-  EllipsisHorizontalIcon,
-} from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { useHotelContext } from "@/context/HotelContext";
+import { useModalStatusContext } from "@/context/ModalContext";
 
-const HotelCard = ({ hotel }: { hotel: IHotel }) => {
+const HotelCard = ({
+  hotel,
+  onEdit,
+  onDelete,
+  onView,
+}: {
+  hotel: IHotel;
+  onEdit: () => void;
+  onDelete: () => void;
+  onView: () => void;
+}) => {
   const { name, address, city, country, id } = hotel;
-  const { getHotel, deleteHotel } = useHotelContext();
+  const { getHotel, setSelectedHotel } = useHotelContext();
+  const { toggleModal } = useModalStatusContext();
 
   const handleViewHotel = (id: string) => {
     const hotel = getHotel(id);
-    console.log("id hotel: ", id, "hotel item", hotel);
+    setSelectedHotel(hotel);
+    onView();
   };
 
   const handleDeleteHotel = (id: string) => {
-    deleteHotel(id);
-    console.log("hotel deleted");
+    const hotel = getHotel(id);
+    setSelectedHotel(hotel);
+    onDelete();
+  };
+
+  const handleEditHotel = (id: string) => {
+    const hotel = getHotel(id);
+    setSelectedHotel(hotel);
+    onEdit();
   };
 
   return (
@@ -88,10 +104,9 @@ const HotelCard = ({ hotel }: { hotel: IHotel }) => {
                   <Menu.Item>
                     {({ active }) => (
                       <button
-                        // onClick={() => {
-                        //   setSelectedUser(user);
-                        //   setPermissionModalIsOpen(true);
-                        // }}
+                        onClick={() => {
+                          handleEditHotel(id);
+                        }}
                         className={`${
                           active ? "bg-gray-200 text-black" : "text-black-900"
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
